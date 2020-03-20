@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using ReversiApp.Areas.Identity.Data;
 
 namespace ReversiApp.Models
@@ -15,7 +18,9 @@ namespace ReversiApp.Models
         public string Omschrijving { get; set; }
         public string Token { get; set; }
         public ICollection<User> Spelers { get; set; }
+        [NotMapped]
         public Kleur[,] Bord { get; set; }
+        public string SerializedBord { get => JsonConvert.SerializeObject(Bord); set => Bord = JsonConvert.DeserializeObject<Kleur[,]>(value); }
         public Kleur AandeBeurt { get; set; }
 
         public Spel()

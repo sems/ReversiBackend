@@ -38,6 +38,8 @@ namespace ReversiApp
                 .AddSignInManager<UsernameEmailSigninManager>()
                 .AddDefaultTokenProviders();
 
+            services.AddControllers()
+                .AddNewtonsoftJson();
             services.AddControllersWithViews();
             services.AddMvc();
 
