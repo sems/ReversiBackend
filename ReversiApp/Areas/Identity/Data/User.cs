@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using ReversiApp.Models;
 
 namespace ReversiApp.Areas.Identity.Data
 {
@@ -10,5 +11,7 @@ namespace ReversiApp.Areas.Identity.Data
     public class User : IdentityUser
     {
         public string Token { get; set; }
+        public int? SpelId { get; set; }
+        public Spel Spel { get; set; }
     }
 }

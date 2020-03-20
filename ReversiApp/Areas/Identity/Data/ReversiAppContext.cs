@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ReversiApp.Areas.Identity.Data;
+using ReversiApp.Models;
 
 namespace ReversiApp.Data
 {
     public class ReversiAppContext : IdentityDbContext<User>
     {
+        public DbSet<Spel> Spel { get; set; }
         public ReversiAppContext(DbContextOptions options)
             : base(options)
         {
