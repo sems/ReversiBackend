@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,6 +13,7 @@ using ReversiApp.Areas.Identity.Data;
 
 namespace ReversiApp.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize(Roles = "Admin")]
     public class DownloadPersonalDataModel : PageModel
     {
         private readonly UserManager<User> _userManager;

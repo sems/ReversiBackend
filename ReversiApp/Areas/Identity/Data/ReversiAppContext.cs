@@ -11,7 +11,7 @@ namespace ReversiApp.Data
 {
     public class ReversiAppContext : IdentityDbContext<User>
     {
-        public ReversiAppContext(DbContextOptions<ReversiAppContext> options)
+        public ReversiAppContext(DbContextOptions options)
             : base(options)
         {
         }
