@@ -11,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ReversiApp.Areas.Identity.Data;
-using ReversiApp.DAL;
 using ReversiApp.Data;
 using ReversiApp.services;
 
@@ -29,17 +28,25 @@ namespace ReversiApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ReversiAppContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("ReversiAppContextConnection")));
+            
+            services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ReversiAppContext>()
+                .AddSignInManager<UsernameEmailSigninManager>()
+                .AddDefaultTokenProviders();
+
             services.AddControllersWithViews();
             services.AddMvc();
-            services.AddDbContext<SpelerContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SpelerContext")));
-
-            services.AddIdentityCore<User>()
-                .AddSignInManager<UsernameEmailSigninManager>()
-                .AddDefaultTokenProviders(); //register new SignInManager
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(
+            IApplicationBuilder app, 
+            IWebHostEnvironment env,
+            UserManager<User> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -51,12 +58,17 @@ namespace ReversiApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            UpdateDatabase(app);
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            DataSeeder.SeedData(userManager, roleManager);
 
             app.UseEndpoints(endpoints =>
             {
@@ -66,5 +78,26 @@ namespace ReversiApp
                 endpoints.MapRazorPages();
             });
         }
+
+        private static void UpdateDatabase(IApplicationBuilder app)
+        {
+            try
+            {
+                using (var serviceScope = app.ApplicationServices
+                    .GetRequiredService<IServiceScopeFactory>()
+                    .CreateScope())
+                {
+                    using (var context = serviceScope.ServiceProvider.GetService<ReversiAppContext>())
+                    {
+                        context.Database.Migrate();
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Database server not available or database corrupted.");
+            }
+        }
+
     }
 }
