@@ -20,6 +20,7 @@ namespace ReversiApp.Models
         public ICollection<User> Spelers { get; set; }
         [NotMapped]
         public Kleur[,] Bord { get; set; }
+        [Display(Name = "Spelbord")]
         public string SerializedBord { get => JsonConvert.SerializeObject(Bord); set => Bord = JsonConvert.DeserializeObject<Kleur[,]>(value); }
         public Kleur AandeBeurt { get; set; }
 

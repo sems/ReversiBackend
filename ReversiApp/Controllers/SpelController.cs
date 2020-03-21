@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,9 +12,11 @@ using ReversiApp.Models;
 
 namespace MvcScaffolding.Controllers
 {
+    /*[Authorize(Roles = "Player, Mod, Admin")]*/
     public class SpelController : Controller
     {
         private readonly ReversiAppContext _context;
+        private static HttpClient _httpClient = new HttpClient();
 
         public SpelController(ReversiAppContext context)
         {
@@ -54,10 +58,13 @@ namespace MvcScaffolding.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Omschrijving,Token,SerializedBord,AandeBeurt")] Spel spel)
+        public async Task<IActionResult> Create([Bind("ID,Omschrijving,")] Spel spel)
         {
             if (ModelState.IsValid)
             {
+                spel.Token = Guid.NewGuid().ToString();
+                spel.AandeBeurt = Kleur.Geen;
+
                 _context.Add(spel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
