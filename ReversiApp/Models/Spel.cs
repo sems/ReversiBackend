@@ -30,7 +30,7 @@ namespace ReversiApp.Models
             // geen kleur = 0
             // Wit = 1
             // Zwart = 2
-
+            Spelers = new List<User>();
             Bord = new Kleur[8, 8];
             for (int x = 0; x < Bord.GetLength(0); x += 1)
             {

@@ -4,23 +4,28 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ReversiApp.Areas.Identity.Data;
 using ReversiApp.Data;
 using ReversiApp.Models;
 
 namespace MvcScaffolding.Controllers
 {
-    /*[Authorize(Roles = "Player, Mod, Admin")]*/
+    [Authorize(Roles = "Player, Mod, Admin")]
     public class SpelController : Controller
     {
         private readonly ReversiAppContext _context;
+        private UserManager<User> _userManager { get; set; }
         private static HttpClient _httpClient = new HttpClient();
-
-        public SpelController(ReversiAppContext context)
+        
+        public SpelController(ReversiAppContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Spel
@@ -62,11 +67,17 @@ namespace MvcScaffolding.Controllers
         {
             if (ModelState.IsValid)
             {
+                System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+                var user = await _userManager.GetUserAsync(currentUser);
+
+                spel.Spelers.Add(user);
+
                 spel.Token = Guid.NewGuid().ToString();
                 spel.AandeBeurt = Kleur.Geen;
 
                 _context.Add(spel);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(spel);
