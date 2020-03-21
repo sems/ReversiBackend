@@ -66,7 +66,7 @@
                 @if (this.User.IsInRole("Admin"))
                 {
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete and Archive</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete or Archive</a>
                 }
             </td>
         </tr>
