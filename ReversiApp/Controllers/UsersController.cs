@@ -78,10 +78,23 @@ namespace MvcScaffolding.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Token,SpelId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] User user)
+        public async Task<IActionResult> Create([Bind("UserName,Email")] User user)
         {
             if (ModelState.IsValid)
             {
+                user.Id = Guid.NewGuid().ToString();
+                user.Token = Guid.NewGuid().ToString();
+                user.Archived = false;
+                user.NormalizedEmail = user.Email.ToUpper();
+                user.NormalizedUserName = user.UserName.ToUpper();
+                user.SpelId = null;
+                user.PasswordHash = Guid.NewGuid().ToString();
+                user.AccessFailedCount = 0;
+                user.LockoutEnabled = true;
+                user.LockoutEnd = null;
+                user.TwoFactorEnabled = false;
+                user.PhoneNumberConfirmed = false;
+
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -113,7 +126,7 @@ namespace MvcScaffolding.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Token,SpelId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] User user)
+        public async Task<IActionResult> Edit(string id, [Bind("Token,SpelId,Id,UserName,Email,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] User user)
         {
             if (id != user.Id)
             {
@@ -124,6 +137,8 @@ namespace MvcScaffolding.Controllers
             {
                 try
                 {
+                    user.NormalizedEmail = user.Email.ToUpper();
+                    user.NormalizedUserName = user.UserName.ToUpper();
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
