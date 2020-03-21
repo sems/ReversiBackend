@@ -43,16 +43,39 @@ namespace ReversiApp.Areas.Identity.Data
         {
             if (userManager.FindByNameAsync("admin").Result == null)
             {
-                User usr = new User();
-                usr.UserName = "admin";
-                usr.Email = "admin@admin.com";
-                usr.EmailConfirmed = true;
-                usr.Token = Guid.NewGuid().ToString();
-                IdentityResult result = userManager.CreateAsync(usr, "Wachtwoord1!").Result;
+                User adminUser = new User()
+                {
+                    Token = Guid.NewGuid().ToString(),
+                    EmailConfirmed = true,
+                    Email = "admin@admin.com",
+                    UserName = "admin",
+                    Archived = false
+                };
+
+                IdentityResult result = userManager.CreateAsync(adminUser, "Admintje1!").Result;
 
                 if (result.Succeeded)
                 {
-                    userManager.AddToRoleAsync(usr, "Admin").Wait();
+                    userManager.AddToRoleAsync(adminUser, "Admin").Wait();
+                }
+            }
+
+            if (userManager.FindByNameAsync("mod").Result == null)
+            {
+                User modUser = new User
+                {
+                    Token = Guid.NewGuid().ToString(),
+                    EmailConfirmed = true,
+                    Email = "mod@mod.com",
+                    UserName = "mod",
+                    Archived = false
+                };
+
+                IdentityResult result = userManager.CreateAsync(modUser, "Moderatortje1!").Result;
+
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(modUser, "Mod").Wait();
                 }
             }
         }

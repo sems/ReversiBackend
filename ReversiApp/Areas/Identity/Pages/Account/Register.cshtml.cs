@@ -83,7 +83,8 @@ namespace ReversiApp.Areas.Identity.Pages.Account
                 {
                     UserName = Input.Username, 
                     Email = Input.Email,
-                    Token = Guid.NewGuid().ToString()
+                    Token = Guid.NewGuid().ToString(),
+                    Archived = false
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
