@@ -32,7 +32,10 @@ namespace ReversiApp
             services.AddDbContext<ReversiAppContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ReversiAppContextConnection")));
             
-            services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<User>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = true;
+                })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ReversiAppContext>()
                 .AddSignInManager<UsernameEmailSigninManager>()

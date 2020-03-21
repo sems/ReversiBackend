@@ -13,6 +13,7 @@ namespace ReversiApp.Data
     public class ReversiAppContext : IdentityDbContext<User>
     {
         public DbSet<Spel> Spel { get; set; }
+        public DbSet<User> User { get; set; }
         public ReversiAppContext(DbContextOptions options)
             : base(options)
         {
