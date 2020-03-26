@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ReversiApp.Models;
-using ReversiRestApi;
+using ReversiApp;
 
 namespace NUnitTestProject1
 {

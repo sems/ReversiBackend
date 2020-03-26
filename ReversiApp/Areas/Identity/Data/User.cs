@@ -16,7 +16,9 @@ namespace ReversiApp.Areas.Identity.Data
         [Display(Name = "Game ID")]
         public int? SpelId { get; set; }
         [Display(Name = "Game")]
-        public Spel Spel { get; set; }
+        public Spel? Spel { get; set; }
+
+        public Kleur Kleur { get; set; }
 
         public bool? Archived { get; set; }
     }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ReversiApp.Models;
 
 namespace ReversiApp.Areas.Identity.Data
 {
@@ -49,7 +50,8 @@ namespace ReversiApp.Areas.Identity.Data
                     EmailConfirmed = true,
                     Email = "admin@admin.com",
                     UserName = "admin",
-                    Archived = false
+                    Archived = false,
+                    Kleur = Kleur.Geen
                 };
 
                 IdentityResult result = userManager.CreateAsync(adminUser, "Admintje1!").Result;
@@ -68,7 +70,8 @@ namespace ReversiApp.Areas.Identity.Data
                     EmailConfirmed = true,
                     Email = "mod@mod.com",
                     UserName = "mod",
-                    Archived = false
+                    Archived = false,
+                    Kleur = Kleur.Geen
                 };
 
                 IdentityResult result = userManager.CreateAsync(modUser, "Moderatortje1!").Result;

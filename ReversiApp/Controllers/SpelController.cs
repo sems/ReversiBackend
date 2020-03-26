@@ -69,11 +69,12 @@ namespace MvcScaffolding.Controllers
             {
                 System.Security.Claims.ClaimsPrincipal currentUser = this.User;
                 var user = await _userManager.GetUserAsync(currentUser);
+                user.Kleur = Kleur.Wit;
 
                 spel.Spelers.Add(user);
 
                 spel.Token = Guid.NewGuid().ToString();
-                spel.AandeBeurt = Kleur.Geen;
+                spel.AandeBeurt = Kleur.Wit;
 
                 _context.Add(spel);
                 await _context.SaveChangesAsync();
@@ -97,6 +98,34 @@ namespace MvcScaffolding.Controllers
                 return NotFound();
             }
             return View(spel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Join(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var spel = await _context.Spel.FindAsync(id);
+
+            if (spel == null)
+            {
+                return NotFound();
+            }
+
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            var user = await _userManager.GetUserAsync(currentUser);
+            user.Kleur = Kleur.Zwart;
+
+            spel.Spelers.Add(user);
+
+            _context.Entry(spel).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Spel/Edit/5

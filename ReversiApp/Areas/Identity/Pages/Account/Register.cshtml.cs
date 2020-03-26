@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using ReversiApp.Areas.Identity.Data;
+using ReversiApp.Models;
 
 namespace ReversiApp.Areas.Identity.Pages.Account
 {
@@ -84,7 +85,8 @@ namespace ReversiApp.Areas.Identity.Pages.Account
                     UserName = Input.Username, 
                     Email = Input.Email,
                     Token = Guid.NewGuid().ToString(),
-                    Archived = false
+                    Archived = false,
+                    Kleur = Kleur.Geen
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)

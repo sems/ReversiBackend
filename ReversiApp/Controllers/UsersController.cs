@@ -94,6 +94,7 @@ namespace MvcScaffolding.Controllers
                 user.LockoutEnd = null;
                 user.TwoFactorEnabled = false;
                 user.PhoneNumberConfirmed = false;
+                user.Kleur = Kleur.Geen;
 
                 _context.Add(user);
                 await _context.SaveChangesAsync();
