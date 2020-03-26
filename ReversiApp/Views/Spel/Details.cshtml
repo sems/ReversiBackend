@@ -38,6 +38,10 @@
     </dl>
 </div>
 <div>
+    <form asp-action="Join">
+        <input type="hidden" asp-for="ID" />
+        <input type="submit" value="Join game" class="btn btn-success" /> |
+    </form>
     <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

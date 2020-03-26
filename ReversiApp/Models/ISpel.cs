@@ -12,7 +12,7 @@ namespace ReversiApp.Models
         int ID { get; set; }
         string Omschrijving { get; set; }
         string Token { get; set; }
-        ICollection<User> Spelers { get; set; }
+        List<User> Spelers { get; set; }
         Kleur[,] Bord { get; set; }
         Kleur AandeBeurt { get; set; }
         bool Pas();

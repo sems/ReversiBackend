@@ -17,7 +17,7 @@ namespace ReversiApp.Models
         public int ID { get; set; }
         public string Omschrijving { get; set; }
         public string Token { get; set; }
-        public ICollection<User> Spelers { get; set; }
+        public List<User> Spelers { get; set; }
         [NotMapped]
         public Kleur[,] Bord { get; set; }
         [Display(Name = "Spelbord")]
