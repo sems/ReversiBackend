@@ -31,6 +31,14 @@ namespace MvcScaffolding.Controllers
         // GET: Spel
         public async Task<IActionResult> Index()
         {
+            System.Security.Claims.ClaimsPrincipal currentUser = User;
+            var user = await _userManager.GetUserAsync(currentUser);
+
+            if (user.SpelId != null)
+            {
+                var url = "/Spel/Play/"+user.SpelId;
+                return Redirect(url);
+            }
             return View(await _context.Spel.ToListAsync());
         }
 
