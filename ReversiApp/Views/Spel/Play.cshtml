@@ -22,20 +22,12 @@
             @Html.DisplayFor(model => model.Omschrijving)
         </li>
         <li>
-            Eigen kleur: 
+            Eigen kleur:
             @user.Kleur
         </li>
+        <li>Ronde: <span class="game_statistics__round"></span></li>
+        <li>Aan de beurt: <span class="game_statistics__aandebeurt"></span></li>
     </ul>
-
-    @*Made dynmamic trough api*@
-    <span>
-        @Html.DisplayNameFor(model => model.Beurt) :
-        @Html.DisplayFor(model => model.Beurt)
-    </span>
-    <span>
-        @Html.DisplayNameFor(model => model.AandeBeurt) :
-        @Html.DisplayFor(model => model.AandeBeurt)
-    </span>
 
     <div class="quote-container"></div>
     <div class="grid-container"></div>
