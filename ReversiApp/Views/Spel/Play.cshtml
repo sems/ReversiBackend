@@ -1,0 +1,43 @@
+﻿@model ReversiApp.Models.Spel
+
+@{
+    ViewData["Title"] = "Play";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <div>
+        <h1>Spel</h1>
+        <span>
+            @Html.DisplayNameFor(model => model.ID) :
+            @Html.DisplayFor(model => model.ID)
+        </span>
+        <span>
+            @Html.DisplayNameFor(model => model.Omschrijving) :
+            @Html.DisplayFor(model => model.Omschrijving)
+        </span>
+        <span>
+            @Html.DisplayNameFor(model => model.Beurt) :
+            @Html.DisplayFor(model => model.Beurt)
+        </span>
+        <div class="quote-container"></div>
+        <div class="grid-container"></div>
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+<script>
+    function afterInit() {
+        console.log('Game init voltooid');
+    }
+
+    $(function() {
+        Game.init(afterInit);
+        Game.Stats.init();
+        Game.Api.init();
+        Game.Reversi.init(@Html.DisplayFor(model => model.ID));
+        Game.Template.init();
+
+        var table = { row: [0,1,2,3,4,5,6,7], column: [0,1,2,3,4,5,6,7]};
+        $('.grid-container').append(Game.Template.parseTemplate("spel", table));
+    });
+</script>
+

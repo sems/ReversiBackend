@@ -39,6 +39,7 @@ namespace ReversiApp.Controllers
             {
                 Id = result.ID,
                 AanDeBeurd = result.AandeBeurt,
+                Beurt = result.Beurt,
                 bord = result.Bord,
                 omschrijving = result.Omschrijving,
                 speler1 = result.Spelers[0].UserName,
@@ -60,7 +61,7 @@ namespace ReversiApp.Controllers
         public void DoeZet(int id, int x, int y)
         {
             Spel result = _context.Spel.SingleOrDefault(x => x.ID == id);
-            result.DoeZet(x, y);
+            result.DoeZet(y, x);
             _context.SaveChanges();
         }
     }

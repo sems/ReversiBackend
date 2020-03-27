@@ -51,7 +51,25 @@ namespace MvcScaffolding.Controllers
 
             return View(spel);
         }
+        
+        // GET: Spel/Play/5
+        public async Task<IActionResult> Play(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var spel = await _context.Spel
+                .FirstOrDefaultAsync(m => m.ID == id);
+            
+            if (spel == null)
+            {
+                return NotFound();
+            }
+
+            return View(spel);
+        }
         // GET: Spel/Create
         public IActionResult Create()
         {
@@ -75,6 +93,7 @@ namespace MvcScaffolding.Controllers
 
                 spel.Token = Guid.NewGuid().ToString();
                 spel.AandeBeurt = Kleur.Wit;
+                spel.Beurt = 1;
 
                 _context.Add(spel);
                 await _context.SaveChangesAsync();

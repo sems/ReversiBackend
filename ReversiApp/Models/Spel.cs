@@ -15,6 +15,8 @@ namespace ReversiApp.Models
     public class Spel : ISpel
     {
         public int ID { get; set; }
+        [Display(Name = "Ronde")]
+        public int Beurt { get; set; }
         public string Omschrijving { get; set; }
         public string Token { get; set; }
         public List<User> Spelers { get; set; }
@@ -411,7 +413,6 @@ namespace ReversiApp.Models
             return false;
         }
 
-        
         private void ChangeLocations(List<int[]> list)
         {
             if (list.Count > 0)
@@ -428,6 +429,7 @@ namespace ReversiApp.Models
         public bool DoeZet(int rijZet, int kolomZet)
         {
             var oppositeColor = AandeBeurt == Kleur.Wit ? Kleur.Zwart : Kleur.Wit;
+            Beurt++;
             if (ZetMogelijk(rijZet, kolomZet))
             {
                 // y, x
