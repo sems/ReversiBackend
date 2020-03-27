@@ -143,11 +143,43 @@ namespace MvcScaffolding.Controllers
                 return NotFound();
             }
 
+            foreach (var usr in _context.User)
+            {
+                if (usr.SpelId == spel.ID)
+                {
+                    spel.Spelers.Add(usr);
+                    Console.WriteLine(usr.SpelId);
+                }
+            }
+
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            var user = await _userManager.GetUserAsync(currentUser);
+            user.Kleur = spel.Spelers[0].Kleur == Kleur.Zwart ? Kleur.Wit : Kleur.Zwart;
+
+            spel.Spelers.Add(user);
+
+            _context.Entry(spel).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Leave(int id)
+        {
+            var spel = await _context.Spel.FindAsync(id);
+
+            if (spel == null)
+            {
+                return NotFound();
+            }
+
             System.Security.Claims.ClaimsPrincipal currentUser = this.User;
             var user = await _userManager.GetUserAsync(currentUser);
             user.Kleur = Kleur.Zwart;
 
-            spel.Spelers.Add(user);
+            spel.Spelers.Remove(user);
 
             _context.Entry(spel).State = EntityState.Modified;
             _context.SaveChanges();

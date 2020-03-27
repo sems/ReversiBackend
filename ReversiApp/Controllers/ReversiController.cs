@@ -10,7 +10,7 @@ using ReversiApp.Models;
 
 namespace ReversiApp.Controllers
 {
-    [Route("api")]
+    [Route("api/")]
     [ApiController]
     public class ReversiController : Controller
     {
@@ -34,7 +34,22 @@ namespace ReversiApp.Controllers
             }
 
             var overwinnendeSpeler = result.OverwegendeKleur();
-
+            if (result.Spelers.Count == 1)
+            {
+                return Json(new
+                {
+                    Id = result.ID,
+                    AanDeBeurd = result.AandeBeurt,
+                    Beurt = result.Beurt,
+                    bord = result.Bord,
+                    omschrijving = result.Omschrijving,
+                    speler1 = result.Spelers[0].UserName,
+                    speler1Kleur = result.Spelers[0].Kleur,
+                    overwinnendeKleur = overwinnendeSpeler,
+                    AmountOfBlack = result.AmountOfBlack,
+                    AmountOfWhite = result.AmountOfWhite
+                });
+            }
             return Json(new
             {
                 Id = result.ID,
@@ -52,15 +67,8 @@ namespace ReversiApp.Controllers
             });
         }
 
-        // GET: api/Reversi/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        [HttpGet("spel/{id}/{x}/{y}/{colour}")]
-        public void DoeZet(int id, int x, int y, int colour)
+        [HttpPost("spel/{id}/{x}/{y}/{colour}")]
+        public void Post([FromRoute]int id, [FromRoute]int x, [FromRoute]int y, [FromRoute] int colour)
         {
             Spel result = _context.Spel.SingleOrDefault(spel => spel.ID == id);
             if (result.AandeBeurt == (Kleur) colour)

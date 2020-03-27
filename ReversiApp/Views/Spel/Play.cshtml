@@ -10,31 +10,35 @@
     var user = await UserManager.GetUserAsync(User);
     var kleur = user.Kleur == Kleur.Wit ? 1 : 2;
 }
-<div>
-    <h1>Spel</h1>
-    <ul>
-        <li>
-            @Html.DisplayNameFor(model => model.ID):
-            @Html.DisplayFor(model => model.ID)
-        </li>
-        <li>
-            @Html.DisplayNameFor(model => model.Omschrijving):
-            @Html.DisplayFor(model => model.Omschrijving)
-        </li>
-        <li>
-            Eigen kleur:
-            @user.Kleur
-        </li>
-        <li>Ronde: <span class="game_statistics__round"></span></li>
-        <li>Aan de beurt: <span class="game_statistics__aandebeurt"></span></li>
-    </ul>
+    <div>
+        <h1>Spel</h1>
+        <form asp-action="Leave">
+            <input type="hidden" asp-for="ID" />
+            <input type="submit" value="Leave game" class="btn btn-danger" />
+        </form>
+        <ul>
+            <li>
+                @Html.DisplayNameFor(model => model.ID):
+                @Html.DisplayFor(model => model.ID)
+            </li>
+            <li>
+                @Html.DisplayNameFor(model => model.Omschrijving):
+                @Html.DisplayFor(model => model.Omschrijving)
+            </li>
+            <li>
+                Eigen kleur:
+                @user.Kleur
+            </li>
+            <li>Ronde: <span class="game_statistics__round"></span></li>
+            <li>Aan de beurt: <span class="game_statistics__aandebeurt"></span></li>
+        </ul>
 
-    <div class="quote-container"></div>
-    <div class="grid-container"></div>
-    <div class="chart-container">
-        <canvas id="myChart"></canvas>
+        <div class="quote-container"></div>
+        <div class="grid-container"></div>
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
     </div>
-</div>
 <script>
     function afterInit() {
         console.log('Game init voltooid');
