@@ -17,9 +17,41 @@ namespace ReversiApp.Models
         public int ID { get; set; }
         [Display(Name = "Ronde")]
         public int Beurt { get; set; }
+        
+        [NotMapped]
+        public List<int> AmountOfBlack = new List<int>();
+        
+        [NotMapped]
+        public List<int> AmountOfWhite = new List<int>();
+
+        public string SerializedAmountOfBlack
+        {
+            get => JsonConvert.SerializeObject(AmountOfBlack);
+            set
+            {
+                if (value != null)
+                {
+                    AmountOfBlack = JsonConvert.DeserializeObject<List<int>>(value);
+                }
+            }
+        }
+
+        public string SerializedAmountOfWhite
+        {
+            get => JsonConvert.SerializeObject(AmountOfWhite);
+            set
+            {
+                if (value != null)
+                {
+                    AmountOfWhite = JsonConvert.DeserializeObject<List<int>>(value);
+                }
+            }
+        }
+
         public string Omschrijving { get; set; }
         public string Token { get; set; }
         public List<User> Spelers { get; set; }
+        
         [NotMapped]
         public Kleur[,] Bord { get; set; }
         [Display(Name = "Spelbord")]
@@ -33,6 +65,7 @@ namespace ReversiApp.Models
             // Wit = 1
             // Zwart = 2
             Spelers = new List<User>();
+            
             Bord = new Kleur[8, 8];
             for (int x = 0; x < Bord.GetLength(0); x += 1)
             {
@@ -46,6 +79,10 @@ namespace ReversiApp.Models
             Bord[4, 4] = Kleur.Wit;
             Bord[3, 4] = Kleur.Zwart;
             Bord[4, 3] = Kleur.Zwart;
+
+            
+            AmountOfBlack.Add(2);
+            AmountOfWhite.Add(2);
         }
 
         public bool Pas()
@@ -429,16 +466,40 @@ namespace ReversiApp.Models
         public bool DoeZet(int rijZet, int kolomZet)
         {
             var oppositeColor = AandeBeurt == Kleur.Wit ? Kleur.Zwart : Kleur.Wit;
-            Beurt++;
             if (ZetMogelijk(rijZet, kolomZet))
             {
                 // y, x
                 Bord[rijZet, kolomZet] = AandeBeurt;
                 AandeBeurt = oppositeColor;
+                UpdateTopFiches();
+                Beurt++;
                 return true;
             }
 
             return false;
+        }
+
+        public void UpdateTopFiches()
+        {
+            int countZwart = 0;
+            int countWit = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                { 
+                    if (Bord[i, j] == Kleur.Zwart)
+                    {
+                        countZwart++;
+                    }
+
+                    if (Bord[i, j] == Kleur.Wit)
+                    {
+                        countWit++;
+                    }
+                }
+            }
+            AmountOfBlack.Add(countZwart);
+            AmountOfWhite.Add(countWit);
         }
     }
 }

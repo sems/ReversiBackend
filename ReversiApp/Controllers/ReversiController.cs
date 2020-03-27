@@ -46,7 +46,9 @@ namespace ReversiApp.Controllers
                 speler1Kleur = result.Spelers[0].Kleur,
                 speler2 = result.Spelers[1].UserName, 
                 speler2Kleur = result.Spelers[1].Kleur,
-                overwinnendeKleur = overwinnendeSpeler
+                overwinnendeKleur = overwinnendeSpeler,
+                AmountOfBlack = result.AmountOfBlack,
+                AmountOfWhite = result.AmountOfWhite
             });
         }
 
