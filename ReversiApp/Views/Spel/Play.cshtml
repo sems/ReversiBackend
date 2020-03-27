@@ -1,38 +1,48 @@
-﻿@model ReversiApp.Models.Spel
+﻿@using Microsoft.AspNetCore.Identity
+@using ReversiApp.Areas.Identity.Data
+@model ReversiApp.Models.Spel
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 
 @{
     ViewData["Title"] = "Play";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var user = await UserManager.GetUserAsync(User);
+    var kleur = user.Kleur == Kleur.Wit ? 1 : 2;
 }
-    <div>
-        <h1>Spel</h1>
-        <ul>
-            <li>
-                @Html.DisplayNameFor(model => model.ID):
-                @Html.DisplayFor(model => model.ID)
-            </li>
-            <li>
-                @Html.DisplayNameFor(model => model.Omschrijving):
-                @Html.DisplayFor(model => model.Omschrijving)
-            </li>
-        </ul>
-        
-@*Made dynmamic trough api*@
-        <span>
-            @Html.DisplayNameFor(model => model.Beurt) :
-            @Html.DisplayFor(model => model.Beurt)
-        </span>
-        <span>
-            @Html.DisplayNameFor(model => model.AandeBeurt) :
-            @Html.DisplayFor(model => model.AandeBeurt)
-        </span>
+<div>
+    <h1>Spel</h1>
+    <ul>
+        <li>
+            @Html.DisplayNameFor(model => model.ID):
+            @Html.DisplayFor(model => model.ID)
+        </li>
+        <li>
+            @Html.DisplayNameFor(model => model.Omschrijving):
+            @Html.DisplayFor(model => model.Omschrijving)
+        </li>
+        <li>
+            Eigen kleur: 
+            @user.Kleur
+        </li>
+    </ul>
 
-        <div class="quote-container"></div>
-        <div class="grid-container"></div>
-        <div class="chart-container">
-            <canvas id="myChart"></canvas>
-        </div>
+    @*Made dynmamic trough api*@
+    <span>
+        @Html.DisplayNameFor(model => model.Beurt) :
+        @Html.DisplayFor(model => model.Beurt)
+    </span>
+    <span>
+        @Html.DisplayNameFor(model => model.AandeBeurt) :
+        @Html.DisplayFor(model => model.AandeBeurt)
+    </span>
+
+    <div class="quote-container"></div>
+    <div class="grid-container"></div>
+    <div class="chart-container">
+        <canvas id="myChart"></canvas>
     </div>
+</div>
 <script>
     function afterInit() {
         console.log('Game init voltooid');
@@ -42,7 +52,8 @@
         Game.init(afterInit);
         Game.Stats.init();
         Game.Api.init();
-        Game.Reversi.init(@Html.DisplayFor(model => model.ID));
+        Game.Reversi.init(@Html.DisplayFor(model => model.ID), @kleur);
+            
         Game.Template.init();
 
         var table = { row: [0,1,2,3,4,5,6,7], column: [0,1,2,3,4,5,6,7]};

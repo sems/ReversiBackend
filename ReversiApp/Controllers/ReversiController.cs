@@ -59,12 +59,15 @@ namespace ReversiApp.Controllers
             return "value";
         }
 
-        [HttpGet("spel/{id}/{x}/{y}")]
-        public void DoeZet(int id, int x, int y)
+        [HttpGet("spel/{id}/{x}/{y}/{colour}")]
+        public void DoeZet(int id, int x, int y, int colour)
         {
-            Spel result = _context.Spel.SingleOrDefault(x => x.ID == id);
-            result.DoeZet(y, x);
-            _context.SaveChanges();
+            Spel result = _context.Spel.SingleOrDefault(spel => spel.ID == id);
+            if (result.AandeBeurt == (Kleur) colour)
+            {
+                result.DoeZet(y, x);
+                _context.SaveChanges();
+            }
         }
     }
 }
