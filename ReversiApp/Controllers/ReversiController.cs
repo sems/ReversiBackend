@@ -10,6 +10,12 @@ using ReversiApp.Models;
 
 namespace ReversiApp.Controllers
 {
+    public class JsonResultModel
+    {
+        public int x { get; set; }
+        public int y { get; set; }
+        public int colour { get; set; }
+    }
     [Route("api/")]
     [ApiController]
     public class ReversiController : Controller
@@ -67,13 +73,24 @@ namespace ReversiApp.Controllers
             });
         }
 
-        [HttpPost("spel/{id}/{x}/{y}/{colour}")]
+        /*[HttpPost("spel/{id}/{x}/{y}/{colour}")]
         public void Post([FromRoute]int id, [FromRoute]int x, [FromRoute]int y, [FromRoute] int colour)
         {
             Spel result = _context.Spel.SingleOrDefault(spel => spel.ID == id);
             if (result.AandeBeurt == (Kleur) colour)
             {
                 result.DoeZet(y, x);
+                _context.SaveChanges();
+            }
+        }*/
+        [HttpPost("spel/{id}/")]
+        public void DoeZet([FromRoute]int id, [FromBody] JsonResultModel jsonResult)
+        {
+
+            Spel result = _context.Spel.SingleOrDefault(spel => spel.ID == id);
+            if (result.AandeBeurt == ((Kleur)jsonResult.colour))
+            {
+                result.DoeZet(jsonResult.x, jsonResult.y);
                 _context.SaveChanges();
             }
         }
