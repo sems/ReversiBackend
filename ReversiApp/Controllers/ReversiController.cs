@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Helpers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ReversiApp.Areas.Identity.Data;
 using ReversiApp.Data;
 using ReversiApp.Models;
 
@@ -16,14 +20,18 @@ namespace ReversiApp.Controllers
         public int y { get; set; }
         public int colour { get; set; }
     }
+
     [Route("api/")]
     [ApiController]
     public class ReversiController : Controller
     {
         private ReversiAppContext _context { get; set; }
-        public ReversiController(ReversiAppContext Context)
+        private UserManager<User> _userManager { get; set; }
+
+        public ReversiController(ReversiAppContext Context, UserManager<User> userManager)
         {
             _context = Context;
+            _userManager = userManager;
         }
 
         [HttpGet("spel/{id}")]
@@ -73,26 +81,36 @@ namespace ReversiApp.Controllers
             });
         }
 
-        /*[HttpPost("spel/{id}/{x}/{y}/{colour}")]
-        public void Post([FromRoute]int id, [FromRoute]int x, [FromRoute]int y, [FromRoute] int colour)
-        {
-            Spel result = _context.Spel.SingleOrDefault(spel => spel.ID == id);
-            if (result.AandeBeurt == (Kleur) colour)
-            {
-                result.DoeZet(y, x);
-                _context.SaveChanges();
-            }
-        }*/
         [HttpPost("spel/{id}/")]
-        public void DoeZet([FromRoute]int id, [FromBody] JsonResultModel jsonResult)
+        public async Task<HttpResponseMessage> DoeZet([FromRoute]int id, [FromBody] JsonResultModel jsonResult)
         {
-
             Spel result = _context.Spel.SingleOrDefault(spel => spel.ID == id);
-            if (result.AandeBeurt == ((Kleur)jsonResult.colour))
+            
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            var user = await _userManager.GetUserAsync(currentUser);
+
+            foreach (var item in _context.User)
             {
-                result.DoeZet(jsonResult.x, jsonResult.y);
-                _context.SaveChanges();
+                if (item.Spel == result && !result.Spelers.Contains(item))
+                {
+                    result.Spelers.Add(item);
+                }
             }
+
+            if (result.Spelers.Contains(user) && user.Kleur == ((Kleur)jsonResult.colour))
+            {
+                if (result.AandeBeurt == ((Kleur)jsonResult.colour))
+                {
+                    if (result.DoeZet(jsonResult.x, jsonResult.y))
+                    {
+                        _context.SaveChanges();
+                        return new HttpResponseMessage(HttpStatusCode.Accepted);
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.NotModified);
+                }
+                return new HttpResponseMessage(HttpStatusCode.NotModified);
+            }
+            return new HttpResponseMessage(HttpStatusCode.NotModified);
         }
     }
 }
