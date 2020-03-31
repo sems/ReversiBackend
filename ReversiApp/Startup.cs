@@ -46,14 +46,14 @@ namespace ReversiApp
             services.AddControllersWithViews();
             services.AddMvc();
 
-            services.AddTransient<IEmailSender, AuthorizedMessageSender>(i =>
+            /*services.AddTransient<IEmailSender, AuthorizedMessageSender>(i =>
                 new AuthorizedMessageSender(
                     Configuration["EmailSender:Host"],
                     Configuration.GetValue<int>("EmailSender:Port"),
                     Configuration.GetValue<bool>("EmailSender:EnableSSL"),
                     Configuration["EmailSender:Username"],
                     Configuration["EmailSender:Password"]
-                ));
+                ));*/
             
         }
 
